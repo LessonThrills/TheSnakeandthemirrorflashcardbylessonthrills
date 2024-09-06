@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Snake and the Mirror Flashcards by LessonThrills</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-top: 20px;
+        }
+
+        #flashcard {
+            position: relative;
+            width: 80%;
+            max-width: 600px;
+            height: 300px;
+            perspective: 1000px;
+            margin: 20px;
+        }
+
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .card-face.front {
+            background: linear-gradient(45deg, #ff6f61, #ffcc2f);
+            color: white;
+        }
+
+        .card-face.back {
+            background: linear-gradient(45deg, #ffcc2f, #ff6f61);
+            transform: rotateY(180deg);
+            color: white;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .controls button[disabled] {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .youtube-link {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .youtube-link img {
+            margin-left: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .youtube-link img:hover {
+            transform: scale(1.1);
+        }
+
+        @media only screen and (max-width: 768px) {
+            .card-face {
+                font-size: 1rem;
+            }
+
+            .controls button {
+                font-size: 0.9rem;
+                padding: 8px 16px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>The Snake and the Mirror Flashcards by LessonThrills</h1>
+
+    <div id="flashcard">
+        <div class="card">
+            <div class="card-face front" id="question"></div>
+            <div class="card-face back" id="answer">
+                <h2>Detail Answer:</h2>
+                <p id="answerText"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="firstBtn">First</button>
+        <button id="prevBtn">Previous</button>
+        <button id="nextBtn">Next</button>
+    </div>
+
+    <div class="youtube-link">
+        <p>Click this YouTube icon to visit our YouTube channel:</p>
+        <a href="https://youtube.com/@lessonthrills?si=ZO-iYNu_oudw4kht" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/YouTube_icon_%282013-2017%29.png/800px-YouTube_icon_%282013-2017%29.png" width="40" alt="YouTube Icon">
+        </a>
+    </div>
+
+    <script>
+        const flashcards = [
+            {
+                question: "1. What kind of house did the doctor live in?",
+                answer: "The doctor lived in a small, rented, poorly electrified room with rats frequently visiting."
+            },
+            {
+                question: "2. What was the doctor's financial situation?",
+                answer: "The doctor had just started his practice and had minimal earnings, possessing only sixty rupees."
+            },
+            {
+                question: "3. Describe the noise the doctor heard upon entering his room.",
+                answer: "The doctor heard familiar noises of rats moving in the beams."
+            },
+            {
+                question: "4. What decisions did the doctor make while looking into the mirror?",
+                answer: "He decided to shave daily, grow a thin moustache, and keep an attractive smile on his face."
+            },
+            {
+                question: "5. Why did the doctor want to marry a fat woman?",
+                answer: "The doctor believed that if he ever needed to run away from a mistake, a fat woman wouldn't be able to catch him."
+            },
+            {
+                question: "6. What happened when the doctor turned around after hearing a dull thud?",
+                answer: "A fat snake landed on the doctor’s shoulder and coiled around his arm."
+            },
+            {
+                question: "7. How did the doctor react when the snake coiled around his arm?",
+                answer: "The doctor remained motionless, almost turning to stone with fear."
+            },
+            {
+                question: "8. What was the doctor’s mental state as the snake coiled around him?",
+                answer: "He felt the presence of God and experienced a crushing pain in his arm, likened to molten fire."
+            },
+            {
+                question: "9. How did the snake behave after coiling around the doctor?",
+                answer: "The snake turned its head to look into the mirror, seemingly fascinated by its reflection."
+            },
+            {
+                question: "10. What allowed the doctor to escape from the snake’s grip?",
+                answer: "The snake's distraction with its reflection in the mirror allowed the doctor to quietly leave the room."
+            },
+            {
+                question: "11. What humorous twist is present in the doctor's escape from the snake?",
+                answer: "The doctor had grand plans for his life, but ended up running out in fear, abandoning everything for safety."
+            },
+            {
+                question: "12. How did the doctor’s appearance contrast with his ambition?",
+                answer: "The doctor wanted to appear handsome and confident, but lived a modest life with little possessions."
+            },
+            {
+                question: "13. What two major decisions did the doctor take while looking in the mirror?",
+                answer: "To shave daily and keep a charming smile at all times."
+            },
+            {
+                question: "14. How does the humor in the story arise from the contrast between the doctor's dreams and reality?",
+                answer: "The doctor dreams of becoming a handsome, wealthy man, but his real life is filled with modesty and fear."
+            },
+            {
+                question: "15. What was left in the doctor’s room after the robbery, and why was it ironic?",
+                answer: "The thief left behind the doctor’s dirty vest, showing a humorous sense of cleanliness."
+            },
+            {
+                question: "16. How did the snake exit the doctor’s body?",
+                answer: "The snake unwound from the doctor’s arm, slithered onto the table, and seemed preoccupied with its reflection."
+            },
+            {
+                question: "17. How did the doctor describe his wife’s physical appearance compared to his earlier thoughts?",
+                answer: "Contrary to his wish for a fat wife, the doctor married a thin woman with the gift of a sprinter."
+            },
+            {
+                question: "18. What does the story tell us about the doctor’s personality?",
+                answer: "The doctor was vain and fanciful, but the snake incident showed him a more humbling reality."
+            },
+            {
+                question: "19. What was the significance of the mirror in the story?",
+                answer: "The mirror symbolized the doctor’s vanity but also became the object of the snake’s distraction, saving him."
+            },
+            {
+                question: "20. What is the humorous element in the doctor's thoughts of marrying a rich, fat woman?",
+                answer: "The doctor thought a fat wife would be too slow to catch him if he ever needed to run away."
+            },
+            {
+                question: "21. Why did the sounds of rats stop during the snake’s entry?",
+                answer: "The rats likely sensed the presence of the snake and stopped moving."
+            },
+            {
+                question: "22. How does the doctor’s interaction with the snake reflect the theme of helplessness?",
+                answer: "Despite being a learned professional, the doctor is rendered completely helpless when confronted by the snake."
+            },
+            {
+                question: "23. What does the doctor's reaction to the snake tell us about his character?",
+                answer: "The doctor’s reaction reflects his vulnerability and deep fear, as well as his limitations."
+            },
+            {
+                question: "24. What literary devices are used to convey humor in the story?",
+                answer: "Irony, contrast, and exaggeration are used to create humor, especially in the doctor’s inflated self-image."
+            },
+            {
+                question: "25. How did the doctor explain his escape to his friends?",
+                answer: "He humorously mentioned running for his life, taking a bath, and changing clothes after escaping."
+            },
+            {
+                question: "26. What lesson does the doctor seem to learn by the end of the story?",
+                answer: "The doctor realizes the insignificance of vanity and how unpredictable life can be."
+            },
+            {
+                question: "27. How does the doctor describe his physical reaction during the snake's coiling?",
+                answer: "He describes his body as turning to stone while his mind remained active."
+            },
+            {
+                question: "28. What did the doctor wonder about the snake as it looked in the mirror?",
+                answer: "He humorously wondered if the snake was admiring itself or making decisions about grooming."
+            },
+            {
+                question: "29. How does the story reflect the theme of human vanity?",
+                answer: "The story highlights human vanity through the doctor’s obsession with appearance, contrasted with life-threatening danger."
+            },
+            {
+                question: "30. What was the doctor’s first reaction when he saw the snake?",
+                answer: "The doctor was paralyzed with fear, unable to move or cry out."
+            },
+            {
+                question: "31. What contrast is drawn between the doctor’s thoughts before and after the snake’s appearance?",
+                answer: "Before the snake appeared, the doctor was focused on vanity, but afterward, he focused on survival."
+            },
+            {
+                question: "32. What ironic element does the doctor’s reflection in the mirror introduce?",
+                answer: "The mirror reflects the doctor’s vanity, but also distracts the snake, allowing him to escape."
+            },
+            {
+                question: "33. How does the doctor describe his feelings about the snake after the incident?",
+                answer: "He laughs about the situation and never saw the snake again, calling it 'a snake obsessed with its own beauty.'"
+            },
+            {
+                question: "34. What did the doctor and his friends discover when they returned the next day?",
+                answer: "They found that most of the doctor’s belongings had been stolen, but the thief left behind the dirty vest."
+            },
+            {
+                question: "35. How does the snake symbolize fear in the story?",
+                answer: "The snake represents the doctor’s deepest fear, immobilizing him and forcing him to confront mortality."
+            },
+            {
+                question: "36. How does the doctor’s decision to run contrast with his earlier thoughts of bravery?",
+                answer: "The doctor fantasized about being brave and handsome, but in reality, he fled in fear."
+            },
+            {
+                question: "37. What was the doctor’s reasoning behind wanting to marry a rich woman?",
+                answer: "The doctor wanted a rich wife so he could live comfortably without financial concerns."
+            },
+            {
+                question: "38. How does the snake in the mirror add a surreal element to the story?",
+                answer: "The image of the snake gazing at its reflection adds a surreal dimension to the life-threatening situation."
+            },
+            {
+                question: "39. Why did the doctor smile at himself while facing death?",
+                answer: "He smiled feebly at himself, realizing how foolish his earlier vain thoughts were in the face of danger."
+            },
+            {
+                question: "40. What can we infer about the doctor’s attitude toward life before the snake appeared?",
+                answer: "Before the snake, the doctor was self-absorbed and focused on his appearance and ambitions."
+            },
+            {
+                question: "41. How did the snake behave after seeing itself in the mirror?",
+                answer: "The snake appeared fascinated with its reflection and slowly unwound from the doctor’s arm."
+            },
+            {
+                question: "42. What role does irony play in the story 'The Snake and the Mirror'?",
+                answer: "Irony is central as the doctor’s trivial concerns about appearance are contrasted with the life-threatening danger."
+            },
+            {
+                question: "43. What happens to the doctor’s sense of self-importance during the snake incident?",
+                answer: "His self-importance vanishes as he becomes helpless and terrified in the presence of the snake."
+            },
+            {
+                question: "44. Why does the doctor consider his decisions while looking in the mirror 'earth-shaking'?",
+                answer: "He sees his decisions to improve his appearance as profound, reflecting his inflated sense of importance."
+            },
+            {
+                question: "45. How does the author use humor to portray the doctor's fear?",
+                answer: "The author juxtaposes the doctor's vanity and ambitions with his helplessness, creating humor through irony."
+            },
+            {
+                question: "46. What was the doctor’s primary concern before the snake appeared?",
+                answer: "Before the snake, the doctor was primarily concerned with his appearance and future marriage prospects."
+            },
+            {
+                question: "47. What is the significance of the thief in the story?",
+                answer: "The thief adds a layer of humor by stealing the doctor’s belongings but leaving behind the dirty vest."
+            },
+            {
+                question: "48. What does the snake’s reflection in the mirror symbolize?",
+                answer: "The snake’s reflection symbolizes vanity and self-obsession, mirroring the doctor’s earlier behavior."
+            },
+            {
+                question: "49. How did the doctor describe his mental state during the snake’s coiling?",
+                answer: "The doctor’s body was frozen, but his mind was active, imagining the words 'O God' being written outside his heart."
+            },
+            {
+                question: "50. What moral or lesson can be drawn from 'The Snake and the Mirror'?",
+                answer: "The story teaches the unpredictability of life and the folly of vanity, reminding us that appearances and plans can be overturned by danger."
+            }
+        ];
+
+        let currentCard = 0;
+
+        const questionDiv = document.getElementById('question');
+        const answerDiv = document.getElementById('answerText');
+        const card = document.querySelector('.card');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const firstBtn = document.getElementById('firstBtn');
+
+        function updateFlashcard() {
+            questionDiv.innerText = flashcards[currentCard].question;
+            answerDiv.innerText = flashcards[currentCard].answer;
+            prevBtn.disabled = currentCard === 0;
+            nextBtn.disabled = currentCard === flashcards.length - 1;
+            firstBtn.disabled = currentCard === 0;
+        }
+
+        card.addEventListener('click', function() {
+            card.classList.toggle('is-flipped');
+            const flipSound = new Audio('https://www.myinstants.com/media/sounds/page-flip.mp3');
+            flipSound.play();
+        });
+
+        nextBtn.addEventListener('click', function() {
+            if (currentCard < flashcards.length - 1) {
+                currentCard++;
+                updateFlashcard();
+                card.classList.remove('is-flipped');
+            }
+        });
+
+        prevBtn.addEventListener('click', function() {
+            if (currentCard > 0) {
+                currentCard--;
+                updateFlashcard();
+                card.classList.remove('is-flipped');
+            }
+        });
+
+        firstBtn.addEventListener('click', function() {
+            currentCard = 0;
+            updateFlashcard();
+            card.classList.remove('is-flipped');
+        });
+
+        // Initialize the first card
+        updateFlashcard();
+    </script>
+
+</body>
+</html>
